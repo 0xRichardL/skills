@@ -42,7 +42,8 @@ Use this sequence for every Learning Item:
 1. **Set the delta.** State what the learner should understand or be able to do after the item. Check existing knowledge only when it changes what needs teaching.
 2. **Choose the teaching path.** Use the simple path when one straightforward concept and a short check can satisfy the mastery evidence. Use the complex path when the evidence requires multiple connected parts, approaches, or steps.
 3. **Teach and verify.** Follow the matching path below, then check the guide's stated mastery evidence or a learner-driven equivalent recorded in progress.
-4. **Close.** Mark the item `completed` only after the learner demonstrates that evidence. Record the evidence, unresolved details, and exact next action.
+4. **Review taught knowledge.** Check that what was taught covers the Learning Item's outcome and in-scope key ideas to the standard expected for the topic, and that the mastery evidence was demonstrated. If either falls short, return to step 3 to teach and verify the missing part within the time limits.
+5. **Close.** Mark the item `completed` only after the learner demonstrates that evidence. Record the evidence, unresolved details, and exact next action.
 
 ### Simple Learning Items
 
