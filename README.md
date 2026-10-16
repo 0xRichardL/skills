@@ -30,7 +30,7 @@ python3 evals/build_learning_guide.py
 python3 evals/run_learning_guide.py
 ```
 
-Use `--list` with either script to see its cases, or `--case build-create` / `--case run-teach` to run one. Each case copies its skill into a temporary workspace, invokes it through `codex exec`, and checks file behavior. The scripts save final responses, event logs, generated files, and pass/fail summaries under `evals/results/<skill>/` (ignored by Git). Review the saved responses and artifacts for teaching and research quality; the automated checks cover core file and workflow invariants.
+Use `--list` with either script to see its cases, or `--case build-scope-review` / `--case run-teach` to run one. Each case copies its skill into a temporary workspace, invokes it through `codex exec`, and checks file behavior. The scripts save final responses, event logs, generated files, and pass/fail summaries under `evals/results/<skill>/` (ignored by Git). Review the saved responses and artifacts for teaching and research quality; the automated checks cover core file and workflow invariants.
 
 For a manual review, check that the guide's scope, source claims, and time estimates are credible. For a teaching case, check that the explanation is accurate, the exercise matches the unit's mastery evidence, and the saved progress describes the same exercise and next action shown to the learner. These judgment calls are not covered by the automatic pass/fail result.
 

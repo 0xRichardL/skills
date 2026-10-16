@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Evaluate the build-learning-guide skill."""
 
-import re
 from pathlib import Path
 
 from common import GUIDE_PATH, PROGRESS_PATH, FIXTURES, copy_fixture, run_cases
@@ -13,8 +12,17 @@ CREATE_PROMPT = (
     "records. I can read JSON but am new to event logs. My total active "
     "learning budget is 30 minutes. Use only event-log-notes.md as a source."
 )
+DRAFT_PROMPT = (
+    CREATE_PROMPT
+    + " We already agreed on the scope: one JSON object per line, checking the "
+    "type and timestamp fields, reporting malformed line numbers, and "
+    "continuing after a malformed line. Defer streaming large files. "
+    "Please prepare the complete guide for my review. I have not approved "
+    "the guide draft yet."
+)
 CASES = {
-    "build-create": CREATE_PROMPT,
+    "build-scope-review": CREATE_PROMPT,
+    "build-draft-review": DRAFT_PROMPT,
     "build-missing-input": (
         "Use $build-learning-guide to make a guide about event logs. "
         "Use only event-log-notes.md as a source."
@@ -34,14 +42,29 @@ def checks_for(name: str, workspace: Path, final: str) -> list[tuple[str, bool]]
     progress = workspace / PROGRESS_PATH
     content = guide.read_text() if guide.exists() else ""
     generated = list(workspace.rglob("*_GUIDE.md"))
-    if name == "build-create":
-        rows = re.findall(r"^\|\s*(LG-\d+)\s*\|.*\|\s*(\d+)\s+(?:min|minutes?)\s*\|$", content, re.M)
+    if name == "build-scope-review":
+        reply = final.lower()
         return [
-            ("guide created at target path", guide.exists()),
+            ("no guide before scope confirmation", not generated),
             ("no progress file created", not progress.exists()),
-            ("outcome and success criteria present", "Desired outcome" in content and "Success criteria" in content),
-            ("roadmap has unique unit IDs and fits budget", bool(rows) and len(rows) == len(set(x[0] for x in rows)) and sum(int(x[1]) for x in rows) <= 30),
-            ("source cited and no placeholders", "event-log-notes.md" in content and "<" not in content),
+            ("proposes scope and asks for human input", (
+                any(word in reply for word in ("scope", "cover", "must learn"))
+                and any(word in reply for word in ("defer", "exclude", "out of scope"))
+                and any(word in reply for word in ("confirm", "correct", "edit"))
+            )),
+        ]
+    if name == "build-draft-review":
+        reply = final.lower()
+        return [
+            ("no guide before draft approval", not generated),
+            ("no progress file created", not progress.exists()),
+            ("shows complete draft", all(part in final for part in (
+                "Learning contract", "Priority and scope", "Roadmap", "Sources", "LG-01"
+            ))),
+            ("presents a limitation", any(word in reply for word in (
+                "limit", "trade-off", "tradeoff"
+            ))),
+            ("requests edits or explicit approval", "edit" in reply and "approv" in reply),
         ]
     if name == "build-missing-input":
         reply = final.lower()
@@ -58,7 +81,10 @@ def checks_for(name: str, workspace: Path, final: str) -> list[tuple[str, bool]]
         return [
             ("existing guide preserved", content == (FIXTURES / "EVENT_LOGS_GUIDE.md").read_text()),
             ("no second guide created without confirmation", len(generated) == 1),
-            ("asks for confirmation of another destination", "?" in final),
+            ("asks for confirmation of another destination", (
+                any(word in final.lower() for word in ("confirm", "approve"))
+                and any(word in final.lower() for word in ("new destination", "another path", "v2"))
+            )),
         ]
     raise ValueError(name)
 

@@ -30,9 +30,9 @@
 
 ## Roadmap
 
-| ID | Unit | Observable outcome | Key ideas | Practice and mastery evidence | Estimate |
+| ID | Unit | Observable outcome | Knowledge to learn | Practice and mastery evidence | Estimate |
 | --- | --- | --- | --- | --- | ---: |
-| LG-01 | <unit name> | <one outcome> | <concise ideas> | <practice plus evidence required for completion> | <duration> |
+| LG-01 | <unit name> | <one outcome> | <specific in-scope concepts, components, operations, or procedures> | <practice and evidence checking every essential listed element> | <duration> |
 
 **Planned total:** <sum that does not exceed the total budget>
 
